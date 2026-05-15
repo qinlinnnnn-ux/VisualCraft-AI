@@ -1,4 +1,4 @@
-# ViralCraft AI ?Codex Build PRD / Implementation Brief
+# ViralCraft AI  PRD  Brief
 
 > Upload this file to Codex and ask it to build the demo.  
 > Goal: create a polished, high-fidelity frontend prototype for an AI short-video viral-template marketplace and creation studio.
