@@ -1,4 +1,4 @@
-import { FormEvent, useMemo, useState } from "react";
+﻿import { FormEvent, lazy, Suspense, useMemo, useState } from "react";
 
 type Section = "discover" | "templates" | "studio" | "upload" | "earnings" | "settings";
 type CreatorMode = "Human Creator" | "AI Digital Human" | "Brand Account";
@@ -187,6 +187,8 @@ const navItems: { id: Section; label: string; icon: string }[] = [
   { id: "settings", label: "Settings", icon: "S" }
 ];
 
+const CommerceOrbitDemo = lazy(() => import("./CommerceOrbitDemo"));
+
 function generateDraft({
   template,
   topic,
@@ -235,6 +237,17 @@ function generateDraft({
 }
 
 export default function App() {
+  const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
+  const currentPath = window.location.pathname.replace(basePath, "") || "/";
+  const isCommerceDemo = currentPath === "/commerce";
+  if (isCommerceDemo) {
+    return (
+      <Suspense fallback={null}>
+        <CommerceOrbitDemo />
+      </Suspense>
+    );
+  }
+
   const [templates, setTemplates] = useState(initialTemplates);
   const [selectedTemplate, setSelectedTemplate] = useState(initialTemplates[0]);
   const [activeSection, setActiveSection] = useState<Section>("discover");
@@ -483,6 +496,9 @@ function TopBar({
       <button className="primary-button" onClick={() => setActiveSection("studio")}>
         Generate with AI
       </button>
+      <a className="ghost-button topbar-link" href={`${import.meta.env.BASE_URL}commerce`}>
+        Commerce Demo
+      </a>
     </header>
   );
 }
@@ -1004,3 +1020,5 @@ function SettingsPanel() {
     </section>
   );
 }
+
+

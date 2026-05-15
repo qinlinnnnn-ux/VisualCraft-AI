@@ -250,6 +250,14 @@ button {
   font-weight: 800;
 }
 
+.topbar-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
 .primary-button {
   color: #050507;
   background: linear-gradient(135deg, var(--cyan), var(--pink));

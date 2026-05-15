@@ -4,12 +4,17 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
+    "start": "vite --host 0.0.0.0",
     "dev": "vite --host 0.0.0.0",
+    "generate:frames": "node scripts/generate_orbit_frames.mjs",
     "build": "tsc --noEmit && vite build",
+    "build:github": "tsc --noEmit && vite build && node scripts/copy_spa_fallback.mjs",
     "preview": "vite preview --host 0.0.0.0"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^5.1.1",
+    "framer-motion": "^12.38.0",
+    "lucide-react": "^1.16.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "typescript": "^5.9.3",
