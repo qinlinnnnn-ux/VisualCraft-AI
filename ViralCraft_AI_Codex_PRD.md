@@ -1,4 +1,4 @@
-# ViralCraft AI 鈥?Codex Build PRD / Implementation Brief
+# ViralCraft AI ?Codex Build PRD / Implementation Brief
 
 > Upload this file to Codex and ask it to build the demo.  
 > Goal: create a polished, high-fidelity frontend prototype for an AI short-video viral-template marketplace and creation studio.
@@ -159,7 +159,7 @@ Mobile responsiveness:
 - Settings
 
 ### Top Bar
-- Search input: 鈥淪earch hooks, niches, creators鈥︹€?- Trend chips: `AI Avatar`, `Beauty`, `Product Review`, `Storytime`, `Education`, `UGC Ad`
+- Search input: search hooks, niches, creators?- Trend chips: `AI Avatar`, `Beauty`, `Product Review`, `Storytime`, `Education`, `UGC Ad`
 - CTA button: `Generate with AI`
 
 ### Main Sections
