@@ -4,12 +4,13 @@ import math
 from pathlib import Path
 from typing import Iterable
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "portfolio_output"
 OUT.mkdir(exist_ok=True)
+SCREENSHOT_DIR = ROOT / "portfolio_screenshots"
 
 W, H = 1920, 1080
 SAFE_X = 96
@@ -107,6 +108,12 @@ def draw_text(
     return y
 
 
+def centered_text(draw: ImageDraw.ImageDraw, box, text: str, ft: ImageFont.FreeTypeFont, fill=TEXT):
+    x1, y1, x2, y2 = box
+    tw, th = text_size(draw, text, ft)
+    draw.text((x1 + (x2 - x1 - tw) / 2, y1 + (y2 - y1 - th) / 2 - 2), text, font=ft, fill=fill)
+
+
 def pill(draw, x, y, label, fill=(37, 39, 49), color=MUTED, pad_x=16, pad_y=8):
     tw, th = text_size(draw, label, F["small"])
     rounded(draw, (x, y, x + tw + pad_x * 2, y + th + pad_y * 2), r=22, fill=fill, outline=(76, 79, 94))
@@ -125,7 +132,7 @@ def add_bg(img: Image.Image):
 
 def add_header(draw: ImageDraw.ImageDraw, page: int, section: str):
     draw.text((SAFE_X, 48), "ViralCraft AI", font=F["h3"], fill=TEXT)
-    draw.text((SAFE_X, 84), "AI 产品经理实习作品集 · AIGC Short-video Product", font=F["small"], fill=MUTED)
+    draw.text((SAFE_X, 84), "AI 浜у搧缁忕悊瀹炰範浣滃搧闆?路 AIGC Short-video Product", font=F["small"], fill=MUTED)
     draw.text((W - 188, 62), f"0{page}/05", font=F["small"], fill=MUTED)
     draw.line((SAFE_X, 124, W - SAFE_X, 124), fill=(42, 45, 56), width=1)
     draw.text((W - 420, 84), section, font=F["tiny"], fill=(150, 210, 218))
@@ -187,7 +194,7 @@ def ui_surface(draw, x, y, w, h, title, mode="market"):
             ImageDraw.Draw(mask).rounded_rectangle((0, 0, card_w, 90), radius=14, fill=255)
             page.paste(g, (xx, yy), mask)
             draw.text((xx + 16, yy + 96), titles[i], font=F["small"], fill=TEXT)
-            draw.text((xx + 16, yy + 126), "Viral logic: hook → tension → payoff", font=F["tiny"], fill=MUTED)
+            draw.text((xx + 16, yy + 126), "Viral logic: hook 鈫?tension 鈫?payoff", font=F["tiny"], fill=MUTED)
             draw.text((xx + card_w - 46, yy + 28), str([96, 91, 94][i]), font=F["small"], fill=TEXT)
     elif mode == "studio":
         rows = [("Template", "3-Second Curiosity Hook"), ("Topic", "AI fitness coach")]
@@ -279,6 +286,32 @@ def product_thumb(draw, x: int, y: int, w: int, h: int, label: str, mode: str):
             draw._image.paste(gradient((32, bh), CYAN, PINK, vertical=True), (bx, base - bh))
 
 
+def screenshot_files() -> list[Path]:
+    names = [
+        "01_discover.png",
+        "02_studio.png",
+        "03_upload.png",
+        "04_earnings.png",
+        "05_studio_alt.png",
+    ]
+    paths = [SCREENSHOT_DIR / name for name in names]
+    return paths if all(path.exists() for path in paths) else []
+
+
+def screenshot_card(draw, x: int, y: int, w: int, h: int, label: str, path: Path):
+    rounded(draw, (x, y, x + w, y + h), r=18, fill=(18, 19, 25), outline=(58, 62, 74), width=2)
+    draw.text((x + 16, y + 14), label, font=F["small"], fill=TEXT)
+    img = Image.open(path).convert("RGB")
+    frame = (x + 14, y + 50, x + w - 14, y + h - 14)
+    fw, fh = frame[2] - frame[0], frame[3] - frame[1]
+    fitted = ImageOps.contain(img, (fw, fh), method=Image.Resampling.LANCZOS)
+    px = frame[0] + (fw - fitted.width) // 2
+    py = frame[1] + (fh - fitted.height) // 2
+    mask = Image.new("L", fitted.size, 0)
+    ImageDraw.Draw(mask).rounded_rectangle((0, 0, fitted.width, fitted.height), radius=10, fill=255)
+    draw._image.paste(fitted, (px, py), mask)
+
+
 def slide_1() -> Image.Image:
     img = Image.new("RGB", (W, H))
     add_bg(img)
@@ -286,11 +319,11 @@ def slide_1() -> Image.Image:
     add_header(d, 1, "CASE OVERVIEW")
     draw_logo(d, SAFE_X, 176, 72)
     draw_text(d, (SAFE_X, 276), "ViralCraft AI", F["hero"], max_w=760)
-    draw_text(d, (SAFE_X, 372), "AI 爆款视频模板市场\n与创作工作台", F["h1"], max_w=820)
+    draw_text(d, (SAFE_X, 372), "AI 鐖嗘瑙嗛妯℃澘甯傚満\n涓庡垱浣滃伐浣滃彴", F["h1"], max_w=820)
     draw_text(
         d,
         (SAFE_X, 500),
-        "面向新手创作者、AI 数字人运营者与创作者模板供给者，把成熟创作者的爆款经验结构化为可复用、可购买、可由 AI 执行的视频模板。",
+        "闈㈠悜鏂版墜鍒涗綔鑰呫€丄I 鏁板瓧浜鸿繍钀ヨ€呬笌鍒涗綔鑰呮ā鏉夸緵缁欒€咃紝鎶婃垚鐔熷垱浣滆€呯殑鐖嗘缁忛獙缁撴瀯鍖栦负鍙鐢ㄣ€佸彲璐拱銆佸彲鐢?AI 鎵ц鐨勮棰戞ā鏉裤€?,
         F["body"],
         fill=MUTED,
         max_w=740,
@@ -302,7 +335,7 @@ def slide_1() -> Image.Image:
     draw_text(d, (SAFE_X, 780), "From Generate Content\nto Generate Viral Structure.", F["h2"], max_w=650)
     ui_surface(d, 990, 170, 720, 520, "Viral logic marketplace", "market")
     phone_mock(d, 1495, 515, 0.82)
-    draw_text(d, (SAFE_X, 994), "定位：AI 产品经理实习作品集 / 原型与数据均为模拟，用于展示产品思路与交互设计能力", F["tiny"], fill=MUTED)
+    draw_text(d, (SAFE_X, 994), "瀹氫綅锛欰I 浜у搧缁忕悊瀹炰範浣滃搧闆?/ 鍘熷瀷涓庢暟鎹潎涓烘ā鎷燂紝鐢ㄤ簬灞曠ず浜у搧鎬濊矾涓庝氦浜掕璁¤兘鍔?, F["tiny"], fill=MUTED)
     return img
 
 
@@ -311,19 +344,19 @@ def slide_2() -> Image.Image:
     add_bg(img)
     d = ImageDraw.Draw(img)
     add_header(d, 2, "PROBLEM & USERS")
-    draw_text(d, (SAFE_X, 172), "问题不是不会生成，\n而是不会组织传播结构。", F["h1"], max_w=720)
+    draw_text(d, (SAFE_X, 172), "闂涓嶆槸涓嶄細鐢熸垚锛孿n鑰屾槸涓嶄細缁勭粐浼犳挱缁撴瀯銆?, F["h1"], max_w=720)
     draw_text(
         d,
         (SAFE_X, 330),
-        "AIGC 降低了内容生产成本，但新手更缺少内容结构判断力：开头如何抓人、如何制造好奇缺口、何时给出证明与 CTA。",
+        "AIGC 闄嶄綆浜嗗唴瀹圭敓浜ф垚鏈紝浣嗘柊鎵嬫洿缂哄皯鍐呭缁撴瀯鍒ゆ柇鍔涳細寮€澶村浣曟姄浜恒€佸浣曞埗閫犲ソ濂囩己鍙ｃ€佷綍鏃剁粰鍑鸿瘉鏄庝笌 CTA銆?,
         F["body"],
         fill=MUTED,
         max_w=730,
     )
     users = [
-        ("新手创作者", "不知道如何写 hook；节奏平铺；需要低成本试错。", PINK),
-        ("AI 数字人运营者", "需要稳定人设、节奏、互动结构与内容生产 SOP。", CYAN),
-        ("模板供给者", "有爆款经验，但课程太重；希望用轻量模板规模化变现。", PURPLE),
+        ("鏂版墜鍒涗綔鑰?, "涓嶇煡閬撳浣曞啓 hook锛涜妭濂忓钩閾猴紱闇€瑕佷綆鎴愭湰璇曢敊銆?, PINK),
+        ("AI 鏁板瓧浜鸿繍钀ヨ€?, "闇€瑕佺ǔ瀹氫汉璁俱€佽妭濂忋€佷簰鍔ㄧ粨鏋勪笌鍐呭鐢熶骇 SOP銆?, CYAN),
+        ("妯℃澘渚涚粰鑰?, "鏈夌垎娆剧粡楠岋紝浣嗚绋嬪お閲嶏紱甯屾湜鐢ㄨ交閲忔ā鏉胯妯″寲鍙樼幇銆?, PURPLE),
     ]
     y = 520
     for title, desc, color in users:
@@ -334,24 +367,25 @@ def slide_2() -> Image.Image:
     rounded(d, (980, 180, 1748, 858), r=26, fill=(18, 19, 25), outline=(58, 62, 74))
     draw_text(d, (1036, 238), "Opportunity map", F["h2"])
     stages = [
-        ("输入主题", "Topic"),
-        ("匹配模板", "Template"),
-        ("生成结构", "Hook / Script"),
-        ("发布反馈", "Data"),
-        ("创作者收益", "Revenue"),
+        ("杈撳叆涓婚", "Topic"),
+        ("鍖归厤妯℃澘", "Template"),
+        ("鐢熸垚缁撴瀯", "Hook / Script"),
+        ("鍙戝竷鍙嶉", "Data"),
+        ("鍒涗綔鑰呮敹鐩?, "Revenue"),
     ]
-    yy = 360
+    yy = 340
     last = None
     for cn, en in stages:
-        rounded(d, (1070, yy, 1390, yy + 78), r=16, fill=PANEL_2, outline=(72, 75, 90))
-        draw_text(d, (1096, yy + 15), cn, F["h3"])
-        draw_text(d, (1298, yy + 24), en, F["tiny"], fill=MUTED)
+        box = (1072, yy, 1388, yy + 64)
+        rounded(d, box, r=16, fill=PANEL_2, outline=(72, 75, 90))
+        centered_text(d, (box[0], box[1] + 3, box[2], box[1] + 40), cn, F["h3"], fill=TEXT)
+        centered_text(d, (box[0], box[1] + 37, box[2], box[3] - 3), en, F["tiny"], fill=MUTED)
         if last:
-            flow_arrow(d, 1230, last + 78, 1230, yy - 8, color=(96, 235, 231))
+            flow_arrow(d, 1230, last + 64, 1230, yy - 6, color=(96, 235, 231))
         last = yy
-        yy += 112
-    draw_text(d, (1446, 382), "核心判断", F["h3"], fill=CYAN)
-    draw_text(d, (1446, 428), "把创作者经验从“口头经验”转成 AI 可执行的结构化模板，是产品差异点。", F["body"], fill=TEXT, max_w=240)
+        yy += 88
+    draw_text(d, (1446, 382), "鏍稿績鍒ゆ柇", F["h3"], fill=CYAN)
+    draw_text(d, (1446, 428), "鎶婂垱浣滆€呯粡楠屼粠鈥滃彛澶寸粡楠屸€濊浆鎴?AI 鍙墽琛岀殑缁撴瀯鍖栨ā鏉匡紝鏄骇鍝佸樊寮傜偣銆?, F["body"], fill=TEXT, max_w=240)
     return img
 
 
@@ -360,25 +394,38 @@ def slide_3() -> Image.Image:
     add_bg(img)
     d = ImageDraw.Draw(img)
     add_header(d, 3, "PRODUCT INTERFACE SYSTEM")
-    draw_text(d, (SAFE_X, 164), "5 个核心产品界面：\n从模板消费到创作者变现。", F["h1"], max_w=760)
+    draw_text(d, (SAFE_X, 164), "5 涓牳蹇冧骇鍝佺晫闈細\n浠庢ā鏉挎秷璐瑰埌鍒涗綔鑰呭彉鐜般€?, F["h1"], max_w=760)
     draw_text(
         d,
         (SAFE_X, 316),
-        "这页系统展示完整 MVP 信息架构：用户发现模板、理解模板逻辑、进入 AI 创作、创作者上传模板，并在收益面板里看到商业闭环。",
+        "杩欓〉绯荤粺灞曠ず瀹屾暣 MVP 淇℃伅鏋舵瀯锛氱敤鎴峰彂鐜版ā鏉裤€佺悊瑙ｆā鏉块€昏緫銆佽繘鍏?AI 鍒涗綔銆佸垱浣滆€呬笂浼犳ā鏉匡紝骞跺湪鏀剁泭闈㈡澘閲岀湅鍒板晢涓氶棴鐜€?,
         F["body"],
         fill=MUTED,
         max_w=940,
     )
-    thumbs = [
-        ("01 Discover / Marketplace", "discover"),
-        ("02 Template Detail", "detail"),
-        ("03 AI Studio", "studio"),
-        ("04 Upload Template", "upload"),
-        ("05 Earnings Dashboard", "earnings"),
-    ]
-    positions = [(96, 470), (686, 470), (1276, 470), (390, 770), (980, 770)]
-    for (label, mode), (x, y) in zip(thumbs, positions):
-        product_thumb(d, x, y, 548, 250, label, mode)
+    shot_paths = screenshot_files()
+    if shot_paths:
+        labels = [
+            "01 Discover / Marketplace",
+            "02 AI Studio",
+            "03 Upload Template",
+            "04 Earnings Dashboard",
+            "05 Template Detail / Library",
+        ]
+        positions = [(82, 438), (688, 438), (1294, 438), (386, 750), (992, 750)]
+        for label, path, (x, y) in zip(labels, shot_paths, positions):
+            screenshot_card(d, x, y, 544, 272, label, path)
+    else:
+        thumbs = [
+            ("01 Discover / Marketplace", "discover"),
+            ("02 Template Detail", "detail"),
+            ("03 AI Studio", "studio"),
+            ("04 Upload Template", "upload"),
+            ("05 Earnings Dashboard", "earnings"),
+        ]
+        positions = [(96, 470), (686, 470), (1276, 470), (390, 770), (980, 770)]
+        for (label, mode), (x, y) in zip(thumbs, positions):
+            product_thumb(d, x, y, 548, 250, label, mode)
     return img
 
 
@@ -387,16 +434,16 @@ def slide_4() -> Image.Image:
     add_bg(img)
     d = ImageDraw.Draw(img)
     add_header(d, 4, "AI CREATION WORKSPACE")
-    draw_text(d, (SAFE_X, 168), "AI Studio：\n模板约束下的生成工作流", F["h1"], max_w=760)
-    draw_text(d, (SAFE_X, 342), "不是让 AI 自由发挥，而是让 AI 在经过验证的爆款结构中工作。", F["body"], fill=MUTED, max_w=700)
+    draw_text(d, (SAFE_X, 168), "AI Studio锛歕n妯℃澘绾︽潫涓嬬殑鐢熸垚宸ヤ綔娴?, F["h1"], max_w=760)
+    draw_text(d, (SAFE_X, 342), "涓嶆槸璁?AI 鑷敱鍙戞尌锛岃€屾槸璁?AI 鍦ㄧ粡杩囬獙璇佺殑鐖嗘缁撴瀯涓伐浣溿€?, F["body"], fill=MUTED, max_w=700)
     ui_surface(d, SAFE_X, 438, 820, 420, "AI creation form", "studio")
     phone_mock(d, 1035, 178, 1.12)
     rounded(d, (1352, 210, 1776, 748), r=22, fill=(18, 19, 25), outline=(58, 62, 74))
     draw_text(d, (1390, 252), "Generated output", F["h3"], fill=(165, 214, 222))
     outputs = [
         ("Title", "I tested this AI fitness coach framework so you don't have to"),
-        ("Script", "Scene 1 bold claim → Scene 2 common mistake → Scene 3 template logic → Scene 4 CTA"),
-        ("Shot list", "0.0s hook punch-in · 1.2s proof visual · 6.8s payoff frame"),
+        ("Script", "Scene 1 bold claim 鈫?Scene 2 common mistake 鈫?Scene 3 template logic 鈫?Scene 4 CTA"),
+        ("Shot list", "0.0s hook punch-in 路 1.2s proof visual 路 6.8s payoff frame"),
         ("Hashtags", "#AICreator #ViralTemplate #ShortVideo"),
     ]
     yy = 310
@@ -409,7 +456,7 @@ def slide_4() -> Image.Image:
     for i, s in enumerate(steps):
         x = pill(d, x, y, s, fill=(31, 34, 44), color=TEXT)
         if i < len(steps) - 1:
-            draw_text(d, (x - 2, y + 8), "→", F["small"], fill=CYAN)
+            draw_text(d, (x - 2, y + 8), "鈫?, F["small"], fill=CYAN)
             x += 30
     return img
 
@@ -419,17 +466,17 @@ def slide_5() -> Image.Image:
     add_bg(img)
     d = ImageDraw.Draw(img)
     add_header(d, 5, "BUSINESS LOOP & PM VALUE")
-    draw_text(d, (SAFE_X, 166), "Creator Economy：\n把方法论变成可交易资产。", F["h1"], max_w=760)
-    draw_text(d, (SAFE_X, 330), "平台形成双边闭环：新手与 AI 数字人消费模板，头部创作者上传模板获得下载与分成，数据表现反哺模板排序。", F["body"], fill=MUTED, max_w=720)
+    draw_text(d, (SAFE_X, 166), "Creator Economy锛歕n鎶婃柟娉曡鍙樻垚鍙氦鏄撹祫浜с€?, F["h1"], max_w=760)
+    draw_text(d, (SAFE_X, 330), "骞冲彴褰㈡垚鍙岃竟闂幆锛氭柊鎵嬩笌 AI 鏁板瓧浜烘秷璐规ā鏉匡紝澶撮儴鍒涗綔鑰呬笂浼犳ā鏉胯幏寰椾笅杞戒笌鍒嗘垚锛屾暟鎹〃鐜板弽鍝烘ā鏉挎帓搴忋€?, F["body"], fill=MUTED, max_w=720)
     ui_surface(d, SAFE_X, 500, 760, 340, "Creator earnings dashboard", "earn")
     rounded(d, (920, 210, 1770, 790), r=28, fill=(18, 19, 25), outline=(58, 62, 74))
-    draw_text(d, (970, 260), "产品闭环", F["h2"])
+    draw_text(d, (970, 260), "浜у搧闂幆", F["h2"])
     loop = [
-        ("模板供给", "创作者上传"),
-        ("模板消费", "用户选择"),
-        ("AI 生产", "生成草稿"),
-        ("数据反馈", "发布验证"),
-        ("收益增长", "排行分成"),
+        ("妯℃澘渚涚粰", "鍒涗綔鑰呬笂浼?),
+        ("妯℃澘娑堣垂", "鐢ㄦ埛閫夋嫨"),
+        ("AI 鐢熶骇", "鐢熸垚鑽夌"),
+        ("鏁版嵁鍙嶉", "鍙戝竷楠岃瘉"),
+        ("鏀剁泭澧為暱", "鎺掕鍒嗘垚"),
     ]
     start_x, yy = 970, 430
     box_w, gap = 122, 34
@@ -444,13 +491,13 @@ def slide_5() -> Image.Image:
         centers.append((x + box_w, yy + 48))
         if i < len(loop) - 1:
             flow_arrow(d, x + box_w + 8, yy + 48, x + box_w + gap - 8, yy + 48, color=(96, 235, 231))
-    draw_text(d, (970, 610), "商业模式", F["h3"], fill=CYAN)
-    draw_text(d, (970, 652), "模板按次付费 / 创作者模板包订阅 / 平台交易抽成 / 模板加权推荐", F["body"], max_w=720, fill=TEXT)
-    draw_text(d, (988, 920), "我在这个项目中展示的实习能力", F["h3"], fill=CYAN)
+    draw_text(d, (970, 610), "鍟嗕笟妯″紡", F["h3"], fill=CYAN)
+    draw_text(d, (970, 652), "妯℃澘鎸夋浠樿垂 / 鍒涗綔鑰呮ā鏉垮寘璁㈤槄 / 骞冲彴浜ゆ槗鎶芥垚 / 妯℃澘鍔犳潈鎺ㄨ崘", F["body"], max_w=720, fill=TEXT)
+    draw_text(d, (988, 920), "鎴戝湪杩欎釜椤圭洰涓睍绀虹殑瀹炰範鑳藉姏", F["h3"], fill=CYAN)
     draw_text(
         d,
         (988, 960),
-        "用户洞察 · MVP 范围定义 · PRD 拆解 · AI 生成链路设计 · 原型交互 · 商业闭环与指标意识",
+        "鐢ㄦ埛娲炲療 路 MVP 鑼冨洿瀹氫箟 路 PRD 鎷嗚В 路 AI 鐢熸垚閾捐矾璁捐 路 鍘熷瀷浜や簰 路 鍟嗕笟闂幆涓庢寚鏍囨剰璇?,
         F["body"],
         max_w=760,
     )
@@ -473,3 +520,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+

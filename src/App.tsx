@@ -1,4 +1,4 @@
-﻿import { FormEvent, lazy, Suspense, useMemo, useState } from "react";
+import { FormEvent, lazy, Suspense, useMemo, useState } from "react";
 
 type Section = "discover" | "templates" | "studio" | "upload" | "earnings" | "settings";
 type CreatorMode = "Human Creator" | "AI Digital Human" | "Brand Account";
@@ -1020,5 +1020,7 @@ function SettingsPanel() {
     </section>
   );
 }
+
+
 
 

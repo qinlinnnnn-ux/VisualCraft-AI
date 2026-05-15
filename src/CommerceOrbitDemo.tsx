@@ -60,9 +60,9 @@ export default function CommerceOrbitDemo() {
   return (
     <main className="commerce-page-shell">
       <header className="commerce-site-header" aria-label="Product header">
-        <a className="commerce-brand-lockup" href={import.meta.env.BASE_URL} aria-label="Velour Commerce home">
+        <a className="commerce-brand-lockup" href={import.meta.env.BASE_URL} aria-label="ViralCraft Commerce home">
           <span className="commerce-brand-mark">V</span>
-          <span>Velour Commerce</span>
+          <span>ViralCraft Commerce</span>
         </a>
 
         <nav className="commerce-category-nav" aria-label="Orbit status">
@@ -93,3 +93,5 @@ export default function CommerceOrbitDemo() {
 }
 
 export { orbitMetadata };
+
+

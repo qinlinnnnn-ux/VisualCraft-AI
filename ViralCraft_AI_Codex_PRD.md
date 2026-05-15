@@ -1,4 +1,4 @@
-# VisualCraft-AI — Codex Build PRD / Implementation Brief
+# ViralCraft AI 鈥?Codex Build PRD / Implementation Brief
 
 > Upload this file to Codex and ask it to build the demo.  
 > Goal: create a polished, high-fidelity frontend prototype for an AI short-video viral-template marketplace and creation studio.
@@ -7,7 +7,7 @@
 
 ## 0. One-shot Codex Prompt
 
-You are an expert frontend engineer and product-minded designer. Build a high-fidelity interactive frontend demo for **VisualCraft-AI**, an AI-powered short-video creation platform.
+You are an expert frontend engineer and product-minded designer. Build a high-fidelity interactive frontend demo for **ViralCraft AI**, an AI-powered short-video creation platform.
 
 The product provides **viral video logic templates** for new creators, AI digital humans, and small teams. Users can choose proven content frameworks, fill in their topic/materials/persona, and generate a video-ready script, shot list, captions, hashtags, and a vertical video preview. Influencers can upload their own proven viral templates and earn money from template downloads or usage.
 
@@ -20,13 +20,13 @@ Create the app as a frontend-only prototype with mock data. Prioritize visual po
 ## 1. Product Overview
 
 ### Product Name
-**VisualCraft-AI**
+**ViralCraft AI**
 
 ### Product Positioning
 An AI-powered viral video creation assistant and template marketplace.
 
 ### Core Value Proposition
-VisualCraft-AI helps beginners and AI digital humans create viral short videos by teaching and applying proven creator logic templates. It also allows experienced influencers to monetize their repeatable video frameworks.
+ViralCraft AI helps beginners and AI digital humans create viral short videos by teaching and applying proven creator logic templates. It also allows experienced influencers to monetize their repeatable video frameworks.
 
 ### Core Product Logic
 Most short-video beginners do not only need a video editor. They need a **repeatable content logic system**:
@@ -36,7 +36,7 @@ Most short-video beginners do not only need a video editor. They need a **repeat
 - How to place proof, payoff, CTA, or loop
 - How to adapt the template to a niche, product, or AI avatar
 
-VisualCraft-AI turns those repeatable structures into reusable templates.
+ViralCraft AI turns those repeatable structures into reusable templates.
 
 ### Primary Users
 1. **New human creators**
@@ -159,17 +159,14 @@ Mobile responsiveness:
 - Settings
 
 ### Top Bar
-- Search input: “Search hooks, niches, creators…”
-- Trend chips: `AI Avatar`, `Beauty`, `Product Review`, `Storytime`, `Education`, `UGC Ad`
+- Search input: 鈥淪earch hooks, niches, creators鈥︹€?- Trend chips: `AI Avatar`, `Beauty`, `Product Review`, `Storytime`, `Education`, `UGC Ad`
 - CTA button: `Generate with AI`
 
 ### Main Sections
 
 #### 5.1 Discover / Marketplace
 Show:
-- Hero header: “Turn proven creator logic into viral-ready videos”
-- Small explanation: “Pick a viral template, add your topic, let AI generate the script, shots, captions, and avatar-ready output.”
-- Featured template cards
+- Hero header: 鈥淭urn proven creator logic into viral-ready videos鈥?- Small explanation: 鈥淧ick a viral template, add your topic, let AI generate the script, shots, captions, and avatar-ready output.鈥?- Featured template cards
 - Trending categories
 - Creator leaderboard
 
@@ -334,7 +331,7 @@ const templates = [
       cta: "Ask viewers to follow for the next part."
     },
     inputs: ["Topic", "Audience level", "Common mistake", "3-step framework"],
-    example: "Why do your AI videos feel fake? The problem is not the avatar — it is the script structure."
+    example: "Why do your AI videos feel fake? The problem is not the avatar 鈥?it is the script structure."
   },
   {
     id: "tpl_beauty_004",
@@ -414,7 +411,7 @@ const templates = [
 - Category chips filter templates
 - Clicking a template updates selected template and right-side preview
 - `Use Template` moves user to AI Studio area
-- `Generate Viral Draft` simulates a 1–2 second loading state
+- `Generate Viral Draft` simulates a 1鈥? second loading state
 - Generated output changes based on selected template and user inputs
 - Upload form accepts mock input and adds a new template card locally
 - Earnings dashboard updates or displays mock stats
@@ -422,7 +419,7 @@ const templates = [
 ### Nice-to-have Interactions
 - Animated phone captions
 - Hover effects on template cards
-- Template cards show “viral logic” preview on hover
+- Template cards show 鈥渧iral logic鈥?preview on hover
 - Toggle Human / AI Digital Human / Brand Account
 - Light/dark toggle if easy
 
@@ -524,11 +521,7 @@ Pick a viral framework from top creators, add your topic, and let AI generate th
 - View Earnings
 
 ### Empty / Loading Copy
-- “Analyzing viral structure…”
-- “Writing hook variations…”
-- “Building avatar-ready shot list…”
-- “Optimizing retention moments…”
-
+- 鈥淎nalyzing viral structure鈥︹€?- 鈥淲riting hook variations鈥︹€?- 鈥淏uilding avatar-ready shot list鈥︹€?- 鈥淥ptimizing retention moments鈥︹€?
 ---
 
 ## 12. Product Differentiation to Show in UI
@@ -563,3 +556,5 @@ Use mock data, polished UI, and local state only.
 Create a complete runnable React app.  
 Do not wait for backend APIs.  
 Focus on product clarity, visual polish, and interactions.
+
+
