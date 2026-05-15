@@ -1,4 +1,4 @@
-# VibeFlow AI — Codex Build PRD / Implementation Brief
+# VisualCraft-AI — Codex Build PRD / Implementation Brief
 
 > Upload this file to Codex and ask it to build the demo.  
 > Goal: create a polished, high-fidelity frontend prototype for an AI short-video viral-template marketplace and creation studio.
@@ -7,7 +7,7 @@
 
 ## 0. One-shot Codex Prompt
 
-You are an expert frontend engineer and product-minded designer. Build a high-fidelity interactive frontend demo for **VibeFlow AI**, an AI-powered short-video creation platform.
+You are an expert frontend engineer and product-minded designer. Build a high-fidelity interactive frontend demo for **VisualCraft-AI**, an AI-powered short-video creation platform.
 
 The product provides **viral video logic templates** for new creators, AI digital humans, and small teams. Users can choose proven content frameworks, fill in their topic/materials/persona, and generate a video-ready script, shot list, captions, hashtags, and a vertical video preview. Influencers can upload their own proven viral templates and earn money from template downloads or usage.
 
@@ -20,13 +20,13 @@ Create the app as a frontend-only prototype with mock data. Prioritize visual po
 ## 1. Product Overview
 
 ### Product Name
-**VibeFlow AI**
+**VisualCraft-AI**
 
 ### Product Positioning
 An AI-powered viral video creation assistant and template marketplace.
 
 ### Core Value Proposition
-VibeFlow AI helps beginners and AI digital humans create viral short videos by teaching and applying proven creator logic templates. It also allows experienced influencers to monetize their repeatable video frameworks.
+VisualCraft-AI helps beginners and AI digital humans create viral short videos by teaching and applying proven creator logic templates. It also allows experienced influencers to monetize their repeatable video frameworks.
 
 ### Core Product Logic
 Most short-video beginners do not only need a video editor. They need a **repeatable content logic system**:
@@ -36,7 +36,7 @@ Most short-video beginners do not only need a video editor. They need a **repeat
 - How to place proof, payoff, CTA, or loop
 - How to adapt the template to a niche, product, or AI avatar
 
-VibeFlow AI turns those repeatable structures into reusable templates.
+VisualCraft-AI turns those repeatable structures into reusable templates.
 
 ### Primary Users
 1. **New human creators**
